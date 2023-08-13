@@ -1,6 +1,13 @@
+import con from "../dbConnection.js";
+
 class TasksController {
 	static listTasks = (req, res) => {
-		res.status(200).json({text:"listTasks requisition made"});
+		con.query("SELECT * FROM tasks", (err, result) => {
+			if (err) {
+				res.send(err);
+			}
+			res.send(result);
+		});
 	};
 }
 
