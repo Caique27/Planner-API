@@ -2,13 +2,37 @@ import con from "../dbConnection.js";
 
 class TasksController {
 	static listTasks = (req, res) => {
-		con.query("SELECT * FROM tasks", (err, result) => {
+		var categories;
+		var tasks;
+		con.query("SELECT * FROM categories", (err, result) => {
 			if (err) {
 				res.send(err);
 			}
-			res.send(result);
+			categories = Object.values(JSON.parse(JSON.stringify(result)));
+
+			con.query(
+				`SELECT * FROM tasks ORDER BY category_id,id`,
+				(err, result) => {
+					if (err) {
+						res.send(err);
+					}
+					tasks = Object.values(JSON.parse(JSON.stringify(result)));
+
+					console.log(tasks);
+					console.log(categories);
+					for (var c = 0; c < categories.length; c++) {
+						categories[c].tasks = [];
+						for (var d = 0; d < tasks.length; d++) {
+							if (categories[c].id == tasks[d].category_id) {
+								categories[c].tasks.push(tasks[d]);
+								//tasks.splice(d, 1);
+							}
+						}
+					}
+					res.send(categories);
+				}
+			);
 		});
 	};
 }
-
 export default TasksController;
