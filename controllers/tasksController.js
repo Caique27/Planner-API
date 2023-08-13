@@ -18,8 +18,6 @@ class TasksController {
 					}
 					tasks = Object.values(JSON.parse(JSON.stringify(result)));
 
-					console.log(tasks);
-					console.log(categories);
 					for (var c = 0; c < categories.length; c++) {
 						categories[c].tasks = [];
 						for (var d = 0; d < tasks.length; d++) {
@@ -32,6 +30,15 @@ class TasksController {
 					res.send(categories);
 				}
 			);
+		});
+	};
+
+	static listCategories = (req, res) => {
+		con.query("SELECT * FROM categories ORDER BY id", (err, result) => {
+			if (err) {
+				res.send(err);
+			}
+			res.send(result);
 		});
 	};
 }
