@@ -4,7 +4,7 @@ class TasksController {
 	static listTasks = (req, res) => {
 		var categories;
 		var tasks;
-		con.query("SELECT * FROM categories", (err, result) => {
+		con.query("SELECT * FROM categories ORDER BY id", (err, result) => {
 			if (err) {
 				res.send(err);
 			}
@@ -40,6 +40,31 @@ class TasksController {
 			}
 			res.send(result);
 		});
+	};
+
+	static createCategory = (req, res) => {
+		con.query(
+			`INSERT INTO categories (name) VALUES ("${req.body.name}")`,
+			(err, result) => {
+				if (err) {
+					res.send(err);
+				}
+				res.send(result);
+			}
+		);
+	};
+
+	static createTask = (req, res) => {
+		con.query(
+			`INSERT INTO tasks (category_id,title,status) VALUES 
+		(${req.body.category_id},"${req.body.title}","undone")`,
+			(err, result) => {
+				if (err) {
+					res.send(err);
+				}
+				res.send(result);
+			}
+		);
 	};
 }
 export default TasksController;
