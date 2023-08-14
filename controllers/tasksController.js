@@ -66,5 +66,14 @@ class TasksController {
 			}
 		);
 	};
+	static deleteCategory = (req, res) => {
+		const id = req.params.id;
+		con.query(`DELETE FROM categories WHERE id=${id}`, (err, result) => {
+			if (err) {
+				res.send(err);
+			}
+			res.send(result);
+		});
+	};
 }
 export default TasksController;
