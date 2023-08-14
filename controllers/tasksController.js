@@ -75,5 +75,15 @@ class TasksController {
 			res.send(result);
 		});
 	};
+
+	static deleteTask = (req, res) => {
+		const id = req.params.id;
+		con.query(`DELETE FROM tasks WHERE id=${id}`, (err, result) => {
+			if (err) {
+				res.send(err);
+			}
+			res.send(result);
+		});
+	};
 }
 export default TasksController;
