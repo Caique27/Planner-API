@@ -116,5 +116,8 @@ class TasksController {
 			}
 		);
 	};
+	static invalidRoute = (req, res) => {
+		res.send({ error: true, code: 1, content: "The route does not exist" });
+	};
 }
 export default TasksController;
