@@ -27,7 +27,7 @@ class TasksController {
 							}
 						}
 					}
-					res.send(categories);
+					res.send({ error: false, code: 0, content: categories });
 				}
 			);
 		});
@@ -38,31 +38,95 @@ class TasksController {
 			if (err) {
 				res.send(err);
 			}
-			res.send(result);
+			res.send({ error: false, code: 0, content: result });
 		});
 	};
 
 	static createCategory = (req, res) => {
+		if (req.body.name == "" || req.body.name == undefined) {
+			res.send({
+				error: true,
+				code: 3,
+				content: "There's no value for body",
+			});
+			return;
+		}
+
 		con.query(
 			`INSERT INTO categories (name) VALUES ("${req.body.name}")`,
 			(err, result) => {
 				if (err) {
-					res.send(err);
+					if (err.errno == 1062) {
+						res.send({
+							error: true,
+							code: 4,
+							content:
+								"There's already a category with that name",
+						});
+						return;
+					}
+					res.send({ error: true, code: 100, content: err.code });
+					return;
 				}
-				res.send(result);
+				res.send({
+					error: false,
+					code: 0,
+					content: "Succesfully created category",
+				});
 			}
 		);
 	};
 
 	static createTask = (req, res) => {
+		if (req.body.title == "" || req.body.title == undefined) {
+			res.send({
+				error: true,
+				code: 6,
+				content: "There's no value for title",
+			});
+			return;
+		}
+		if (req.body.category_id == "" || req.body.category_id == undefined) {
+			res.send({
+				error: true,
+				code: 5,
+				content: "There's no value for category",
+			});
+			return;
+		}
 		con.query(
 			`INSERT INTO tasks (category_id,title,status) VALUES 
 		(${req.body.category_id},"${req.body.title}","undone")`,
 			(err, result) => {
 				if (err) {
-					res.send(err);
+					if (err.errno == 1452) {
+						res.send({
+							error: true,
+							code: 7,
+							content: "There is no category with this id",
+						});
+						return;
+					}
+					if (err.errno == "1062") {
+						res.send({
+							error: true,
+							code: 8,
+							content: "A task with this name already exists",
+						});
+						return;
+					}
+					res.send({
+						error: true,
+						code: 100,
+						content: err.code,
+					});
+					return;
 				}
-				res.send(result);
+				res.send({
+					error: false,
+					code: 0,
+					content: "Succesfully created task",
+				});
 			}
 		);
 	};
