@@ -85,5 +85,36 @@ class TasksController {
 			res.send(result);
 		});
 	};
+
+	static changeCategoryName = (req, res) => {
+		const id = req.params.id;
+		const newName = req.body.name;
+		con.query(
+			`UPDATE categories SET name = "${newName}" 
+		WHERE id = ${id}
+		`,
+			(err, result) => {
+				if (err) {
+					res.send(err);
+				}
+				res.send(err);
+			}
+		);
+	};
+
+	static changeTaskStatus = (req, res) => {
+		const id = req.params.id;
+		con.query(
+			`UPDATE tasks t 
+		SET status=IF(status="Done","Undone","Done")
+		 WHERE id = ${req.params.id};`,
+			(err, result) => {
+				if (err) {
+					res.send(err);
+				}
+				res.send(result);
+			}
+		);
+	};
 }
 export default TasksController;

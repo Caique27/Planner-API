@@ -6,6 +6,8 @@ router.get("/tasks/get", TaskController.listTasks);
 router.get("/categories/get", TaskController.listCategories);
 router.post("/categories/create", TaskController.createCategory);
 router.post("/tasks/create", TaskController.createTask);
+router.put("/categories/change/:id", TaskController.changeCategoryName);
+router.put("/tasks/change/:id", TaskController.changeTaskStatus);
 router.delete("/categories/delete/:id", TaskController.deleteCategory);
 router.delete("/tasks/delete/:id", TaskController.deleteTask);
 export default router;
