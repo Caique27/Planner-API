@@ -90,7 +90,7 @@ class TasksController {
 			res.send({
 				error: true,
 				code: 5,
-				content: "There's no value for category",
+				content: "There's no value for category id",
 			});
 			return;
 		}
@@ -132,21 +132,56 @@ class TasksController {
 	};
 	static deleteCategory = (req, res) => {
 		const id = req.params.id;
+
 		con.query(`DELETE FROM categories WHERE id=${id}`, (err, result) => {
-			if (err) {
-				res.send(err);
+			if (err || result.affectedRows == 0) {
+				if (result.affectedRows == 0) {
+					res.send({
+						error: true,
+						code: 9,
+						content: "There is no element with such id",
+					});
+					return;
+				}
+				res.send({
+					error: true,
+					code: 100,
+					content: err.code,
+				});
+				return;
 			}
-			res.send(result);
+			res.send({
+				error: false,
+				code: 0,
+				content: "Succesfully deleted category",
+			});
 		});
 	};
 
 	static deleteTask = (req, res) => {
 		const id = req.params.id;
 		con.query(`DELETE FROM tasks WHERE id=${id}`, (err, result) => {
-			if (err) {
-				res.send(err);
+			if (err || result.affectedRows == 0) {
+				if (result.affectedRows == 0) {
+					res.send({
+						error: true,
+						code: 9,
+						content: "There is no element with such id",
+					});
+					return;
+				}
+				res.send({
+					error: true,
+					code: 100,
+					content: err.code,
+				});
+				return;
 			}
-			res.send(result);
+			res.send({
+				error: false,
+				code: 0,
+				content: "Succesfully deleted task",
+			});
 		});
 	};
 
