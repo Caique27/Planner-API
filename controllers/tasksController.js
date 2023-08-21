@@ -47,7 +47,7 @@ class TasksController {
 			res.send({
 				error: true,
 				code: 3,
-				content: "There's no value for body",
+				content: "There's no value for name",
 			});
 			return;
 		}
@@ -187,16 +187,48 @@ class TasksController {
 
 	static changeCategoryName = (req, res) => {
 		const id = req.params.id;
-		const newName = req.body.name;
+
+		if (req.body.name == "" || req.body.name == undefined) {
+			res.send({
+				error: true,
+				code: 3,
+				content: "There's no value for name",
+			});
+			return;
+		}
+
 		con.query(
-			`UPDATE categories SET name = "${newName}" 
-		WHERE id = ${id}
-		`,
+			`UPDATE categories SET name = "${req.body.name}" WHERE id = ${id}`,
 			(err, result) => {
 				if (err) {
-					res.send(err);
+					if (err.errno == 1062) {
+						res.send({
+							error: true,
+							code: 4,
+							content:
+								"There's already a category with that name",
+						});
+						return;
+					}
+
+					res.send({ error: true, code: 100, content: err.code });
+					return;
+				} else {
+					if (result.affectedRows == 0) {
+						res.send({
+							error: true,
+							code: 9,
+							content: "There is no element with such id",
+						});
+						return;
+					}
 				}
-				res.send(err);
+
+				res.send({
+					error: false,
+					code: 0,
+					content: "Category succesfully renamed",
+				});
 			}
 		);
 	};
@@ -209,9 +241,24 @@ class TasksController {
 		 WHERE id = ${req.params.id};`,
 			(err, result) => {
 				if (err) {
-					res.send(err);
+					res.send({ err: true, code: 100, content: err.code });
+					return;
+				} else {
+					if (result.affectedRows == 0) {
+						res.send({
+							error: true,
+							code: 9,
+							content: "There is no element with such id",
+						});
+						return;
+					}
 				}
-				res.send(result);
+
+				res.send({
+					error: false,
+					code: 0,
+					content: "Task succesfully updated",
+				});
 			}
 		);
 	};
