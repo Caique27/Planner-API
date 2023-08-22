@@ -6,7 +6,17 @@ class TasksController {
 		var tasks;
 		con.query("SELECT * FROM categories ORDER BY id", (err, result) => {
 			if (err) {
-				res.send(err);
+				if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+					res.send({
+						error: true,
+						code: 2,
+						content: "Error connecting to the database",
+					});
+					return;
+				}
+				res.send({ error: true, code: 100, content: err.code });
+
+				return;
 			}
 			categories = Object.values(JSON.parse(JSON.stringify(result)));
 
@@ -14,7 +24,15 @@ class TasksController {
 				`SELECT * FROM tasks ORDER BY category_id,id`,
 				(err, result) => {
 					if (err) {
-						res.send(err);
+						if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+							res.send({
+								error: true,
+								code: 2,
+								content: "Error connecting to the database",
+							});
+							return;
+						}
+						res.send({ error: true, code: 100, content: err.code });
 					}
 					tasks = Object.values(JSON.parse(JSON.stringify(result)));
 
@@ -36,7 +54,16 @@ class TasksController {
 	static listCategories = (req, res) => {
 		con.query("SELECT * FROM categories ORDER BY id", (err, result) => {
 			if (err) {
-				res.send(err);
+				if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+					res.send({
+						error: true,
+						code: 2,
+						content: "Error connecting to the database",
+					});
+					return;
+				}
+				res.send({ error: true, code: 100, content: err.code });
+				return;
 			}
 			res.send({ error: false, code: 0, content: result });
 		});
@@ -56,6 +83,14 @@ class TasksController {
 			`INSERT INTO categories (name) VALUES ("${req.body.name}")`,
 			(err, result) => {
 				if (err) {
+					if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+						res.send({
+							error: true,
+							code: 2,
+							content: "Error connecting to the database",
+						});
+						return;
+					}
 					if (err.errno == 1062) {
 						res.send({
 							error: true,
@@ -99,6 +134,14 @@ class TasksController {
 		(${req.body.category_id},"${req.body.title}","undone")`,
 			(err, result) => {
 				if (err) {
+					if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+						res.send({
+							error: true,
+							code: 2,
+							content: "Error connecting to the database",
+						});
+						return;
+					}
 					if (err.errno == 1452) {
 						res.send({
 							error: true,
@@ -134,12 +177,12 @@ class TasksController {
 		const id = req.params.id;
 
 		con.query(`DELETE FROM categories WHERE id=${id}`, (err, result) => {
-			if (err || result.affectedRows == 0) {
-				if (result.affectedRows == 0) {
+			if (err) {
+				if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
 					res.send({
 						error: true,
-						code: 9,
-						content: "There is no element with such id",
+						code: 2,
+						content: "Error connecting to the database",
 					});
 					return;
 				}
@@ -149,6 +192,16 @@ class TasksController {
 					content: err.code,
 				});
 				return;
+			}
+			if (result.affectedRows == 0) {
+				if (result.affectedRows == 0) {
+					res.send({
+						error: true,
+						code: 9,
+						content: "There is no element with such id",
+					});
+					return;
+				}
 			}
 			res.send({
 				error: false,
@@ -161,12 +214,12 @@ class TasksController {
 	static deleteTask = (req, res) => {
 		const id = req.params.id;
 		con.query(`DELETE FROM tasks WHERE id=${id}`, (err, result) => {
-			if (err || result.affectedRows == 0) {
-				if (result.affectedRows == 0) {
+			if (err) {
+				if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
 					res.send({
 						error: true,
-						code: 9,
-						content: "There is no element with such id",
+						code: 2,
+						content: "Error connecting to the database",
 					});
 					return;
 				}
@@ -176,6 +229,16 @@ class TasksController {
 					content: err.code,
 				});
 				return;
+			}
+			if (result.affectedRows == 0) {
+				if (result.affectedRows == 0) {
+					res.send({
+						error: true,
+						code: 9,
+						content: "There is no element with such id",
+					});
+					return;
+				}
 			}
 			res.send({
 				error: false,
@@ -201,6 +264,14 @@ class TasksController {
 			`UPDATE categories SET name = "${req.body.name}" WHERE id = ${id}`,
 			(err, result) => {
 				if (err) {
+					if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+						res.send({
+							error: true,
+							code: 2,
+							content: "Error connecting to the database",
+						});
+						return;
+					}
 					if (err.errno == 1062) {
 						res.send({
 							error: true,
@@ -241,6 +312,14 @@ class TasksController {
 		 WHERE id = ${req.params.id};`,
 			(err, result) => {
 				if (err) {
+					if (err.code == "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+						res.send({
+							error: true,
+							code: 2,
+							content: "Error connecting to the database",
+						});
+						return;
+					}
 					res.send({ err: true, code: 100, content: err.code });
 					return;
 				} else {
