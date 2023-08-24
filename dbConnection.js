@@ -1,11 +1,11 @@
 import mysql from "mysql2";
 
 const con = mysql.createConnection({
-	host: "containers-us-west-103.railway.app",
-	port: 6726,
-	user: "root",
-	password: "rLhj29ppd0MAjJtQ8dXn",
-	database: "railway",
+	host: "sql10.freesqldatabase.com",
+	port: 3306,
+	user: "sql10641973",
+	password: "m6FrRFH3Fi",
+	database: "sql10641973",
 });
 
 con.connect((err) => {
