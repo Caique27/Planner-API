@@ -197,8 +197,8 @@ class TasksController {
 				if (result.affectedRows == 0) {
 					res.send({
 						error: true,
-						code: 9,
-						content: "There is no element with such id",
+						code: 7,
+						content: "There is no category with such id",
 					});
 					return;
 				}
@@ -235,7 +235,7 @@ class TasksController {
 					res.send({
 						error: true,
 						code: 9,
-						content: "There is no element with such id",
+						content: "There is no task with such id",
 					});
 					return;
 				}
@@ -288,8 +288,8 @@ class TasksController {
 					if (result.affectedRows == 0) {
 						res.send({
 							error: true,
-							code: 9,
-							content: "There is no element with such id",
+							code: 7,
+							content: "There is no category with such id",
 						});
 						return;
 					}
@@ -327,7 +327,7 @@ class TasksController {
 						res.send({
 							error: true,
 							code: 9,
-							content: "There is no element with such id",
+							content: "There is no tasks with such id",
 						});
 						return;
 					}
