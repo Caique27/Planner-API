@@ -1,11 +1,11 @@
 import mysql from "mysql2";
 
 const con = mysql.createConnection({
-	host: "sql10.freesqldatabase.com",
+	host: "db4free.net/",
 	port: 3306,
-	user: "sql10641973",
-	password: "m6FrRFH3Fi",
-	database: "sql10641973",
+	user: "usuariopdb",
+	password: "wxvj*Lz4ud5FBC2",
+	database: "plannerdatabase",
 });
 
 con.connect((err) => {
