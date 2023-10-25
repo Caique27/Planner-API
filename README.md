@@ -129,7 +129,7 @@ Acesse a API através da URL:
 #### Apaga uma tarefa
 
 ```http
-  PUT /tasks/delete/${id}
+  DELETE /tasks/delete/${id}
 ```
 
 ###### Parâmetros do endereço da requisição
